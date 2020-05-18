@@ -88,10 +88,10 @@ def load_configs():
 		config = load_json(CONFIG_FILE)
 	except FileNotFoundError:
 		print("Couldn't load {}".format(CONFIG_FILE))
-		sys.exit()
+		book = []
 	except json.decoder.JSONDecodeError:
 		print("{} seems to be illegal JSON".format(CONFIG_FILE))
-		sys.exit()
+		book = []
 
 	headers = {"Authorization": "Bearer {}".format(config["token"])}
 
