@@ -185,10 +185,10 @@ def handle_challenge(challenge):
 			log("But I don't like the time control!")
 			accepting = False
 
-		if not accepting:
-			decline(challenge["id"])
-		else:
+		if accepting:
 			accept(challenge["id"])
+		else:
+			decline(challenge["id"])
 
 	except Exception as err:
 		log("Exception in handle_challenge(): {}".format(repr(err)))
