@@ -63,6 +63,17 @@ def log(msg):
 		except:
 			print("log() got unprintable msg...")
 
+def simple_post(url):
+
+	r = requests.post(url, headers = headers)
+
+	if r.status_code != 200:
+		log("Upon contacting {}:".format(url))
+		try:
+			log(r.json())
+		except:
+			log("API returned {}".format(r.status_code))
+
 def load_json(filename):
 
 	with open(filename) as infile:
@@ -198,22 +209,12 @@ def handle_challenge(challenge):
 def decline(challengeId):
 
 	log("Declining challenge {}".format(challengeId))
-	r = requests.post("https://lichess.org/api/challenge/{}/decline".format(challengeId), headers = headers)
-	if r.status_code != 200:
-		try:
-			log(r.json())
-		except:
-			log("decline API returned {}".format(r.status_code))
+	simple_post("https://lichess.org/api/challenge/{}/decline".format(challengeId))
 
 def accept(challengeId):
 
 	log("Accepting challenge {}".format(challengeId))
-	r = requests.post("https://lichess.org/api/challenge/{}/accept".format(challengeId), headers = headers)
-	if r.status_code != 200:
-		try:
-			log(r.json())
-		except:
-			log("accept API returned {}".format(r.status_code))
+	simple_post("https://lichess.org/api/challenge/{}/accept".format(challengeId))
 
 def abort_game(gameId):
 
@@ -221,13 +222,7 @@ def abort_game(gameId):
 	global active_game_MUTEX
 
 	log("Aborting game {}".format(gameId))
-
-	r = requests.post("https://lichess.org/api/bot/game/{}/abort".format(gameId), headers = headers)
-	if r.status_code != 200:
-		try:
-			log(r.json())
-		except:
-			log("abort API returned {}".format(r.status_code))
+	simple_post("https://lichess.org/api/bot/game/{}/abort".format(gameId))
 
 	with active_game_MUTEX:
 		if active_game == gameId:
@@ -336,12 +331,7 @@ def handle_state(state, gameId, gameFull, colour):
 
 	mymove = genmove(gameFull["initialFen"], state["moves"])
 
-	r = requests.post("https://lichess.org/api/bot/game/{}/move/{}".format(gameId, mymove) , headers = headers)
-	if r.status_code != 200:
-		try:
-			log(r.json())
-		except:
-			log("move API returned {}".format(r.status_code))
+	simple_post("https://lichess.org/api/bot/game/{}/move/{}".format(gameId, mymove))
 
 def genmove(initial_fen, moves_string):
 
