@@ -246,13 +246,14 @@ def start_game(gameId):
 			active_game = gameId
 
 	if autoabort:	# Don't do this inside the above "with", as abort() also uses the mutex.
-		log("WARNING: game started but I seem to be in a game")
+		log("WARNING: game starting but I seem to be in a game")
 		abort_game(gameId)
 		return
 
-	threading.Thread(target = runner, args = (gameId, ), daemon = True).start()
-	log("Game {} started. Will run at {} nodes.".format(gameId, config["node_count"]))
+	log("Game {} starting. Will run at {} nodes.".format(gameId, config["node_count"]))
 
+	threading.Thread(target = runner, args = (gameId, ), daemon = True).start()
+	
 # ---------------------------------------------------------------------------------------------------------
 
 def runner(gameId):
