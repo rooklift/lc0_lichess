@@ -279,7 +279,7 @@ def announce_start(gameId):
 	except:
 		weights = "(unknown net)"
 
-	msg = "Game {} starting. Will run {} at {} nodes.".format(gameId, weights, config["node_count"])
+	msg = "Game {} starting. Will run {} at {} node{}.".format(gameId, weights, config["node_count"], "s" if config["node_count"] > 1 else "")
 
 	log(msg)
 
