@@ -254,7 +254,7 @@ def start_game(gameId):
 	log("Game {} starting. Will run at {} nodes.".format(gameId, config["node_count"]))
 
 	threading.Thread(target = runner, args = (gameId, ), daemon = True).start()
-	
+
 # ---------------------------------------------------------------------------------------------------------
 
 def runner(gameId):
@@ -313,8 +313,6 @@ def runner(gameId):
 		active_game = None
 
 def handle_state(state, gameId, gameFull, colour):
-
-	global config
 
 	if state["status"] != "started":
 		return
