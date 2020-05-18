@@ -79,19 +79,20 @@ def load_configs():
 		book = load_json(BOOK_FILE)
 	except FileNotFoundError:
 		print("Couldn't load {}".format(BOOK_FILE))
-		sys.exit()
+		book = []
 	except json.decoder.JSONDecodeError:
 		print("{} seems to be illegal JSON".format(BOOK_FILE))
-		sys.exit()
+		book = []
 
 	try:
 		config = load_json(CONFIG_FILE)
 	except FileNotFoundError:
 		print("Couldn't load {}".format(CONFIG_FILE))
-		book = []
+		sys.exit()
+		
 	except json.decoder.JSONDecodeError:
 		print("{} seems to be illegal JSON".format(CONFIG_FILE))
-		book = []
+		sys.exit()
 
 	headers = {"Authorization": "Bearer {}".format(config["token"])}
 
@@ -349,7 +350,6 @@ def genmove(initial_fen, moves_string):
 	if initial_fen == "startpos":
 		mv = book_move(moves_string)
 		if mv:
-			log("     Book: {}".format(mv))
 			return mv
 
 	if initial_fen == "startpos":
@@ -394,16 +394,29 @@ def genmove(initial_fen, moves_string):
 
 def book_move(moves_string):
 
-	candidate_lines = []
+	mslen = len(moves_string.split())
+
+	candidate_moves = set()
 
 	for line in book:
 		if line.startswith(moves_string) and len(line) > len(moves_string):
-			candidate_lines.append(line)
+			try:
+				candidate_moves.add(line.split()[mslen])
+			except:
+				pass	# Some extra whitespace in the string?
 
-	if len(candidate_lines) == 0:
+	if len(candidate_moves) == 0:
 		return None
 
-	return random.choice(candidate_lines).split()[len(moves_string.split())]
+	ret = random.choice(list(candidate_moves))
+
+	alts = []
+	for mv in candidate_moves:
+		if mv != ret:
+			alts.append(mv)
+
+	log("     Book: {} {}".format(ret, alts))
+	return ret
 
 # ---------------------------------------------------------------------------------------------------------
 
