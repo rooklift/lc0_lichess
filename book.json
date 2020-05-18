@@ -6,7 +6,6 @@
 	"e2e4 e7e5 g1f3 b8c6 f1c4 g8f6",
 	"e2e4 e7e5 g1f3 b8c6 f1b5",
 	"e2e4 e7e5 g1f3 b8c6 d2d4",
-	"e2e4 e7e5 g1f3 g8f6",
 	"e2e4 e7e5 b1c3",
 	"e2e4 e7e5 f2f4 e5f4",
 	"e2e4 e7e5 f2f4 d7d5",
@@ -37,9 +36,9 @@
 	"d2d4 d7d5 c2c4 c7c6",
 	"d2d4 d7d5 c2c4 e7e6",
 	"d2d4 d7d5 c2c4 e7e5",
-	"g1f3",
-	"g2g3",
 	"c2c4 c7c5",
 	"c2c4 e7e5",
-	"c2c4 g8f6"
+	"c2c4 g8f6",
+	"g1f3",
+	"g2g3"
 ]
