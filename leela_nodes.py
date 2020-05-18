@@ -1,4 +1,4 @@
-import json, queue, random, subprocess, sys, threading, time
+import json, os.path, queue, random, subprocess, sys, threading, time
 import requests
 
 BOOK_FILE = "book.json"
@@ -73,6 +73,28 @@ def simple_post(url):
 			log(r.json())
 		except:
 			log("API returned {}".format(r.status_code))
+
+def delayed_tell_all(gameId, msg):
+
+	# To be called in a thread, only!
+
+	time.sleep(5)
+
+	data1 = {"room": "player", "text": msg}
+	data2 = {"room": "spectator", "text": msg}
+
+	# Post is in x-www-form-urlencoded, which requests does by default
+
+	for data in [data1, data2]:
+
+		r = requests.post("https://lichess.org/api/bot/game/{}/chat".format(gameId), data = data, headers = headers)
+
+		if r.status_code != 200:
+			log("Upon contacting {}:".format(url))
+			try:
+				log(r.json())
+			except:
+				log("API returned {}".format(r.status_code))
 
 def load_json(filename):
 
@@ -246,9 +268,22 @@ def start_game(gameId):
 		abort_game(gameId)
 		return
 
-	log("Game {} starting. Will run at {} nodes.".format(gameId, config["node_count"]))
+	announce_start(gameId)
 
 	threading.Thread(target = runner, args = (gameId, ), daemon = True).start()
+
+def announce_start(gameId):
+
+	try:
+		weights = os.path.basename(config["leela_options"]["WeightsFile"])
+	except:
+		weights = "(unknown net)"
+
+	msg = "Game {} starting. Will run {} at {} nodes.".format(gameId, weights, config["node_count"])
+
+	log(msg)
+
+	threading.Thread(target = delayed_tell_all, args = (gameId, msg), daemon = True).start()
 
 # ---------------------------------------------------------------------------------------------------------
 
