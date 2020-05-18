@@ -212,10 +212,10 @@ def handle_challenge(challenge):
 		if challenge["timeControl"]["type"] != "clock":
 			log("But it's lacking a time control!")
 			accepting = False
-		elif challenge["timeControl"]["limit"] < 60 or challenge["timeControl"]["limit"] > 300:
+		elif challenge["timeControl"]["limit"] > 600:
 			log("But I don't like the time control!")
 			accepting = False
-		elif challenge["timeControl"]["increment"] < 1 or challenge["timeControl"]["increment"] > 10:
+		elif challenge["timeControl"]["increment"] > 10:
 			log("But I don't like the time control!")
 			accepting = False
 
