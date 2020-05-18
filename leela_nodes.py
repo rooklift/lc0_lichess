@@ -31,15 +31,6 @@ class Engine():
 		self.process.stdin.flush()
 		# log(self.shortname + " <-- " + msg)
 
-class Game():
-
-	def __init__(self, gameId):
-
-		self.gameId = gameId
-		self.gameFull = None
-		self.colour = None
-		self.events = requests.get("https://lichess.org/api/bot/game/stream/{}".format(gameId), headers = headers, stream = True)
-
 # ---------------------------------------------------------------------------------------------------------------------------------
 
 def engine_stdout_watcher(engine):
