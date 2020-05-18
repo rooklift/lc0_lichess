@@ -1,0 +1,15 @@
+{
+	"account": "BotAccountName",
+	"token": "xxxxxxxxxxxxxxxx",
+
+	"node_count": 20,
+
+	"leela_command": "C:\\Programs (self-installed)\\lc0-cudnn git\\lc0.exe",
+
+	"leela_options": {
+		"WeightsFile": "C:\\Users\\Owner\\Documents\\Misc\\Chess\\Lc0 Networks\\384x30-t60-3010.pb.gz",
+		"SyzygyPath": "C:\\Users\\Owner\\Documents\\Misc\\Chess\\Syzygy",
+		"Temperature": 1.0,
+		"TempDecayMoves": 14
+	}
+}
