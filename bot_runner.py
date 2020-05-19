@@ -176,7 +176,7 @@ def handle_challenge(challenge):
 
 	try:
 
-		# Reload the config for live adjustments to whitelist...
+		# Reload the config for live adjustments...
 		try:
 			config = load_json(CONFIG_FILE)
 		except:
