@@ -4,6 +4,11 @@
 
 	"node_count": 20,
 
+	"min_tc_secs": 60,
+	"max_tc_secs": 300,
+	"min_inc_secs": 0,
+	"max_inc_secs": 5,
+
 	"leela_command": "C:\\Programs (self-installed)\\lc0-cudnn git\\lc0.exe",
 
 	"leela_options": {

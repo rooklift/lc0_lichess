@@ -1,8 +1,10 @@
-import json, os.path, queue, random, subprocess, sys, threading, time
+import json, os.path, pprint, queue, random, subprocess, sys, threading, time
 import requests
 
 BOOK_FILE = "book.json"
 CONFIG_FILE = "config.json"
+
+pp = pprint.PrettyPrinter(indent = 4)
 
 lz = None
 book = None
@@ -57,11 +59,13 @@ def log(msg):
 	if isinstance(msg, str):
 		if msg.rstrip():
 			print(msg.rstrip())
+	elif isinstance(msg, dict):
+		pp.pprint(msg)
 	else:
 		try:
 			print(repr(msg))
 		except:
-			print("log() got unprintable msg...")
+			print("log() got unprintable msg")
 
 def simple_post(url):
 
@@ -178,10 +182,7 @@ def handle_challenge(challenge):
 		except:
 			log("Reloading {} failed!".format(CONFIG_FILE))
 
-		log("Incoming challenge from {} (rated: {}, TC: {})".format(
-			challenge["challenger"]["name"],
-			challenge["rated"],
-			challenge["timeControl"]["show"]))
+		log("Incoming challenge from {} (rated: {})".format(challenge["challenger"]["name"], challenge["rated"]))
 
 		accepting = True
 
@@ -212,11 +213,11 @@ def handle_challenge(challenge):
 		if challenge["timeControl"]["type"] != "clock":
 			log("But it's lacking a time control!")
 			accepting = False
-		elif challenge["timeControl"]["limit"] > 600:
-			log("But I don't like the time control!")
+		elif challenge["timeControl"]["limit"] < config["min_tc_secs"] or challenge["timeControl"]["limit"] > config["max_tc_secs"]:
+			log("But I don't like the time control! ({}+{})".format(challenge["timeControl"]["limit"], challenge["timeControl"]["increment"]))
 			accepting = False
-		elif challenge["timeControl"]["increment"] > 10:
-			log("But I don't like the time control!")
+		elif challenge["timeControl"]["increment"] < config["min_inc_secs"] or challenge["timeControl"]["increment"] > config["max_inc_secs"]:
+			log("But I don't like the time control! ({}+{})".format(challenge["timeControl"]["limit"], challenge["timeControl"]["increment"]))
 			accepting = False
 
 		if accepting:
