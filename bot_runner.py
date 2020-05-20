@@ -126,7 +126,7 @@ def load_configs():
 	except FileNotFoundError:
 		print("Couldn't load {}".format(CONFIG_FILE))
 		sys.exit()
-		
+
 	except json.decoder.JSONDecodeError:
 		print("{} seems to be illegal JSON".format(CONFIG_FILE))
 		sys.exit()
@@ -269,6 +269,12 @@ def start_game(gameId):
 		abort_game(gameId)
 		return
 
+	# Reload the config for live adjustments...
+	try:
+		config = load_json(CONFIG_FILE)
+	except:
+		log("Reloading {} failed!".format(CONFIG_FILE))
+
 	announce_start(gameId)
 
 	threading.Thread(target = runner, args = (gameId, ), daemon = True).start()
@@ -335,7 +341,7 @@ def runner(gameId):
 			handle_state(j["state"], gameId, gameFull, colour)
 
 		elif j["type"] == "gameState":
-			
+
 			handle_state(j, gameId, gameFull, colour)
 
 	log("Game stream closed...")
