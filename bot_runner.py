@@ -253,6 +253,7 @@ def abort_game(gameId):
 
 def start_game(gameId):
 
+	global config
 	global active_game
 	global active_game_MUTEX
 
