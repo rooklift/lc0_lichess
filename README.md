@@ -1,7 +1,7 @@
 Simple Lc0 runner for Lichess API. Either:
 
 * Runs at a specified node count, ignoring time control, or
-* Uses the defualt time manager, if no node count is set.
+* Uses the default time manager, if no node count is set.
 
 The config file should be fairly self explanatory. Rename it `config.json` to actually use it.
 
