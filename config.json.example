@@ -2,11 +2,11 @@
 	"account": "BotAccountName",
 	"token": "xxxxxxxxxxxxxxxx",
 
-	"node_count": 20,
+	"node_count": 0,
 
-	"min_tc_secs": 60,
+	"min_tc_secs": 0,
 	"max_tc_secs": 300,
-	"min_inc_secs": 0,
+	"min_inc_secs": 1,
 	"max_inc_secs": 5,
 
 	"leela_command": "C:\\Programs (self-installed)\\lc0-cudnn git\\lc0.exe",
@@ -15,6 +15,7 @@
 		"WeightsFile": "C:\\Users\\Owner\\Documents\\Misc\\Chess\\Lc0 Networks\\384x30-t60-3010.pb.gz",
 		"SyzygyPath": "C:\\Users\\Owner\\Documents\\Misc\\Chess\\Syzygy",
 		"Temperature": 1.0,
-		"TempDecayMoves": 14
+		"TempDecayMoves": 14,
+		"MoveOverheadMs": 800
 	}
 }
