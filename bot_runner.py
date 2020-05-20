@@ -133,6 +133,8 @@ def load_configs():
 	headers = {"Authorization": "Bearer {}".format(config["token"])}
 
 	config.setdefault("node_count", None)
+	config.setdefault("whitelist", [])
+	config.setdefault("open", True)
 
 def main():
 
@@ -189,6 +191,12 @@ def handle_challenge(challenge):
 				log("But I'm in a game!")
 				accepting = False
 
+		# Not open...
+
+		if not config["open"]:
+			log("But I'm not open to challenges!")
+			accepting = False
+
 		# Variants...
 
 		if challenge["variant"]["key"] != "standard" and challenge["variant"]["key"] != "chess960":
@@ -197,12 +205,9 @@ def handle_challenge(challenge):
 
 		# Not whitelisted...
 
-		try:
-			if len(config["whitelist"]) > 0 and challenge["challenger"]["name"] not in config["whitelist"]:
-				log("But challenger is not whitelisted!")
-				accepting = False
-		except:
-			pass			# No whitelist exists
+		if isinstance(config["whitelist"], list) and len(config["whitelist"]) > 0 and challenge["challenger"]["name"] not in config["whitelist"]:
+			log("But challenger is not whitelisted!")
+			accepting = False
 
 		# Time control...
 
@@ -278,7 +283,7 @@ def announce_start(gameId):
 	except:
 		weights = "(unknown net)"
 
-	if config["node_count"]:
+	if isinstance(config["node_count"], int) and config["node_count"] > 0:
 		msg = "Game {} starting. Will run {} at {} node{}.".format(gameId, weights, config["node_count"], "s" if config["node_count"] > 1 else "")
 	else:
 		msg = "Game {} starting. Will run {} with time manager.".format(gameId, weights)
@@ -384,7 +389,7 @@ def genmove(initial_fen, moves_string, wtime, btime, winc, binc):
 
 	lz.send("position {} moves {}".format(pos_string, moves_string))
 
-	if config["node_count"]:
+	if isinstance(config["node_count"], int) and config["node_count"] > 0:
 		lz.send("go nodes {}".format(config["node_count"]))
 	else:
 		lz.send("go wtime {} btime {} winc {} binc {}".format(wtime, btime, winc, binc))
