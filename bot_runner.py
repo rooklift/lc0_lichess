@@ -126,12 +126,13 @@ def load_configs():
 	except FileNotFoundError:
 		print("Couldn't load {}".format(CONFIG_FILE))
 		sys.exit()
-
 	except json.decoder.JSONDecodeError:
 		print("{} seems to be illegal JSON".format(CONFIG_FILE))
 		sys.exit()
 
 	headers = {"Authorization": "Bearer {}".format(config["token"])}
+
+	config.setdefault("node_count", None)
 
 def main():
 
@@ -170,17 +171,12 @@ def app():
 
 def handle_challenge(challenge):
 
-	global config
 	global active_game
 	global active_game_MUTEX
 
 	try:
 
-		# Reload the config for live adjustments...
-		try:
-			config = load_json(CONFIG_FILE)
-		except:
-			log("Reloading {} failed!".format(CONFIG_FILE))
+		load_configs()		# For live adjustments
 
 		log("Incoming challenge from {} (rated: {})".format(challenge["challenger"]["name"], challenge["rated"]))
 
@@ -253,7 +249,6 @@ def abort_game(gameId):
 
 def start_game(gameId):
 
-	global config
 	global active_game
 	global active_game_MUTEX
 
@@ -270,11 +265,7 @@ def start_game(gameId):
 		abort_game(gameId)
 		return
 
-	# Reload the config for live adjustments...
-	try:
-		config = load_json(CONFIG_FILE)
-	except:
-		log("Reloading {} failed!".format(CONFIG_FILE))
+	load_configs()		# For live adjustments
 
 	announce_start(gameId)
 
@@ -287,7 +278,10 @@ def announce_start(gameId):
 	except:
 		weights = "(unknown net)"
 
-	msg = "Game {} starting. Will run {} at {} node{}.".format(gameId, weights, config["node_count"], "s" if config["node_count"] > 1 else "")
+	if config["node_count"]:
+		msg = "Game {} starting. Will run {} at {} node{}.".format(gameId, weights, config["node_count"], "s" if config["node_count"] > 1 else "")
+	else:
+		msg = "Game {} starting. Will run {} with time manager.".format(gameId, weights)
 
 	log(msg)
 
@@ -372,11 +366,11 @@ def handle_state(state, gameId, gameFull, colour):
 	if len(moves) > 0:
 		log("           {}".format(moves[-1]))
 
-	mymove = genmove(gameFull["initialFen"], state["moves"])
+	mymove = genmove(gameFull["initialFen"], state["moves"], state["wtime"], state["btime"], state["winc"], state["binc"])
 
 	simple_post("https://lichess.org/api/bot/game/{}/move/{}".format(gameId, mymove))
 
-def genmove(initial_fen, moves_string):
+def genmove(initial_fen, moves_string, wtime, btime, winc, binc):
 
 	if initial_fen == "startpos":
 		mv = book_move(moves_string)
@@ -389,7 +383,11 @@ def genmove(initial_fen, moves_string):
 		pos_string = "fen " + initial_fen
 
 	lz.send("position {} moves {}".format(pos_string, moves_string))
-	lz.send("go nodes {}".format(config["node_count"]))
+
+	if config["node_count"]:
+		lz.send("go nodes {}".format(config["node_count"]))
+	else:
+		lz.send("go wtime {} btime {} winc {} binc {}".format(wtime, btime, winc, binc))
 
 	lz_score = None
 	lz_move = None
