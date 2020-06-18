@@ -339,11 +339,17 @@ def runner(gameId):
 				log("setoption name UCI_Chess960 value false")
 				lz.send("setoption name UCI_Chess960 value false")
 
-			if j["white"]["name"].lower() == config["account"].lower():
-				colour = "white"
+			try:
+				if j["white"]["name"].lower() == config["account"].lower():
+					colour = "white"
+			except:
+				pass
 
-			if j["black"]["name"].lower() == config["account"].lower():
-				colour = "black"
+			try:
+				if j["black"]["name"].lower() == config["account"].lower():
+					colour = "black"
+			except:
+				pass
 
 			handle_state(j["state"], gameId, gameFull, colour)
 
