@@ -161,6 +161,8 @@ def app():
 	for key in config["leela_options"]:
 		lz.send("setoption name {} value {}".format(key, config["leela_options"][key]))
 
+	lz.send("ucinewgame")	# Causes Leela to actually load the network, which is good if a ultrabullet game starts.
+
 	event_stream = requests.get("https://lichess.org/api/stream/event", headers = headers, stream = True)
 
 	for line in event_stream.iter_lines():
@@ -171,8 +173,6 @@ def app():
 				handle_challenge(j["challenge"])
 			if j["type"] == "gameStart":
 				start_game(j["game"]["id"])
-
-	lz.send("ucinewgame")	# Causes Leela to actually load the network, which is good if a ultrabullet game starts.
 
 def handle_challenge(challenge):
 
