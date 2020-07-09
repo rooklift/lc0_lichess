@@ -172,6 +172,8 @@ def app():
 			if j["type"] == "gameStart":
 				start_game(j["game"]["id"])
 
+	lz.send("ucinewgame")	# Causes Leela to actually load the network, which is good if a ultrabullet game starts.
+
 def handle_challenge(challenge):
 
 	global active_game
