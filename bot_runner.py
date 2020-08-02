@@ -28,6 +28,15 @@ class Engine():
 	def send(self, msg):
 
 		msg = msg.strip()
+
+		# Don't send uppercase True and False when doing UCI setoption...
+
+		if msg.startswith("setoption"):
+			if msg.endswith("value True"):
+				msg = msg[:-4] + "true"
+			if msg.endswith("value False"):
+				msg = msg[:-5] + "false"
+
 		b = bytes(msg + "\n", encoding = "ascii")
 		self.process.stdin.write(b)
 		self.process.stdin.flush()
