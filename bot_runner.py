@@ -31,7 +31,7 @@ class Engine():
 		b = bytes(msg + "\n", encoding = "ascii")
 		self.process.stdin.write(b)
 		self.process.stdin.flush()
-		if msg.startswith("setoption"):
+		if not (msg.startswith("position") or msg.startswith("go")):
 			log(self.shortname + " <-- " + msg)
 
 # ---------------------------------------------------------------------------------------------------------------------------------
@@ -44,7 +44,8 @@ def engine_stdout_watcher(engine):
 			return		# EOF
 		msg = msg.strip()
 		engine.output.put(msg)
-		# log(engine.shortname + " --> " + msg)
+		if not msg.startswith("info depth"):
+			log(engine.shortname + " --> " + msg)
 
 def engine_stderr_watcher(engine):
 
@@ -53,7 +54,7 @@ def engine_stderr_watcher(engine):
 		if msg == "":
 			return		# EOF
 		msg = msg.strip()
-		# log(engine.shortname + " (e) " + msg)
+		log(engine.shortname + " (e) " + msg)
 
 def log(msg):
 
