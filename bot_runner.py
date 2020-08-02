@@ -31,7 +31,8 @@ class Engine():
 		b = bytes(msg + "\n", encoding = "ascii")
 		self.process.stdin.write(b)
 		self.process.stdin.flush()
-		# log(self.shortname + " <-- " + msg)
+		if msg.startswith("setoption"):
+			log(self.shortname + " <-- " + msg)
 
 # ---------------------------------------------------------------------------------------------------------------------------------
 
@@ -154,7 +155,7 @@ def app():
 
 	global lz
 
-	lz = Engine(config["leela_command"], "LZ")
+	lz = Engine(config["leela_command"], "BOT")
 
 	lz.send("uci")
 
@@ -335,10 +336,8 @@ def runner(gameId):
 			gameFull = j
 
 			if j["variant"]["key"] == "chess960":
-				log("setoption name UCI_Chess960 value true")
 				lz.send("setoption name UCI_Chess960 value true")
 			else:
-				log("setoption name UCI_Chess960 value false")
 				lz.send("setoption name UCI_Chess960 value false")
 
 			try:
