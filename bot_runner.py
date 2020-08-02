@@ -301,7 +301,10 @@ def announce_start(gameId):
 	try:
 		weights = os.path.basename(config["leela_options"]["WeightsFile"])
 	except:
-		weights = "(unknown net)"
+		try:
+			weights = os.path.basename(config["leela_options"]["EvalFile"])
+		except:
+			weights = "(unknown net)"
 
 	if isinstance(config["node_count"], int) and config["node_count"] > 0:
 		msg = "Game {} starting. Will run {} at {} node{}.".format(gameId, weights, config["node_count"], "s" if config["node_count"] > 1 else "")
