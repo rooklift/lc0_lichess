@@ -6,7 +6,7 @@ CONFIG_FILE = "config.json"
 
 pp = pprint.PrettyPrinter(indent = 4)
 
-lz = None
+bot = None
 book = None
 config = None
 headers = None
@@ -163,16 +163,16 @@ def main():
 
 def app():
 
-	global lz
+	global bot
 
-	lz = Engine(config["leela_command"], "BOT")
+	bot = Engine(config["leela_command"], "BOT")
 
-	lz.send("uci")
+	bot.send("uci")
 
 	for key in config["leela_options"]:
-		lz.send("setoption name {} value {}".format(key, config["leela_options"][key]))
+		bot.send("setoption name {} value {}".format(key, config["leela_options"][key]))
 
-	lz.send("ucinewgame")	# Causes Leela to actually load the network, which is good if a ultrabullet game starts.
+	bot.send("ucinewgame")	# Causes Leela to actually load the network, which is good if a ultrabullet game starts.
 
 	event_stream = requests.get("https://lichess.org/api/stream/event", headers = headers, stream = True)
 
@@ -324,7 +324,7 @@ def runner(gameId):
 	global active_game
 	global active_game_MUTEX
 
-	lz.send("ucinewgame")
+	bot.send("ucinewgame")
 
 	events = requests.get("https://lichess.org/api/bot/game/stream/{}".format(gameId), headers = headers, stream = True)
 
@@ -349,9 +349,9 @@ def runner(gameId):
 			gameFull = j
 
 			if j["variant"]["key"] == "chess960":
-				lz.send("setoption name UCI_Chess960 value true")
+				bot.send("setoption name UCI_Chess960 value true")
 			else:
-				lz.send("setoption name UCI_Chess960 value false")
+				bot.send("setoption name UCI_Chess960 value false")
 
 			try:
 				if j["white"]["name"].lower() == config["account"].lower():
@@ -415,44 +415,44 @@ def genmove(initial_fen, moves_string, wtime, btime, winc, binc):
 	else:
 		pos_string = "fen " + initial_fen
 
-	lz.send("position {} moves {}".format(pos_string, moves_string))
+	bot.send("position {} moves {}".format(pos_string, moves_string))
 
 	if isinstance(config["node_count"], int) and config["node_count"] > 0:
-		lz.send("go nodes {}".format(config["node_count"]))
+		bot.send("go nodes {}".format(config["node_count"]))
 	else:
-		lz.send("go wtime {} btime {} winc {} binc {}".format(wtime, btime, winc, binc))
+		bot.send("go wtime {} btime {} winc {} binc {}".format(wtime, btime, winc, binc))
 
-	lz_score = None
-	lz_move = None
+	bot_score = None
+	bot_move = None
 
-	while lz_move is None:
+	while bot_move is None:
 
-		# Read all available LZ info...
+		# Read all available info...
 
 		try:
 			while 1:
-				msg = lz.output.get(block = False)
+				msg = bot.output.get(block = False)
 				tokens = msg.split()
 
 				if "score cp" in msg and "lowerbound" not in msg and "upperbound" not in msg:
 					score_index = tokens.index("cp") + 1
-					lz_score = int(tokens[score_index])
+					bot_score = int(tokens[score_index])
 				elif "score mate" in msg:
 					mate_index = tokens.index("mate") + 1
 					mate_in = int(tokens[mate_index])
 					if mate_in > 0:
-						lz_score = 1000000 - (mate_in * 1000)
+						bot_score = 1000000 - (mate_in * 1000)
 					else:
-						lz_score = -1000000 + (-mate_in * 1000)
+						bot_score = -1000000 + (-mate_in * 1000)
 				elif "bestmove" in msg:
-					lz_move = tokens[1]
+					bot_move = tokens[1]
 					break
 
 		except queue.Empty:
 			time.sleep(0.01)
 
-	log("      Lc0: {} ({})".format(lz_move, lz_score))
-	return lz_move
+	log("      Bot: {} ({})".format(bot_move, bot_score))
+	return bot_move
 
 def book_move(moves_string):
 
