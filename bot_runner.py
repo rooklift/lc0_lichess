@@ -44,7 +44,7 @@ def engine_stdout_watcher(engine):
 			return		# EOF
 		msg = msg.strip()
 		engine.output.put(msg)
-		if not msg.startswith("info depth"):
+		if not (msg.startswith("info depth") or msg.startswith("bestmove")):
 			log(engine.shortname + " --> " + msg)
 
 def engine_stderr_watcher(engine):
