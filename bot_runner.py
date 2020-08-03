@@ -144,6 +144,7 @@ def load_configs():
 	headers = {"Authorization": "Bearer {}".format(config["token"])}
 
 	config.setdefault("node_count", None)
+	config.setdefault("blacklist", [])
 	config.setdefault("whitelist", [])
 	config.setdefault("allow_bots", True)
 	config.setdefault("open", True)
@@ -221,6 +222,12 @@ def handle_challenge(challenge):
 
 		if isinstance(config["whitelist"], list) and len(config["whitelist"]) > 0 and challenge["challenger"]["name"] not in config["whitelist"]:
 			log("But challenger is not whitelisted!")
+			accepting = False
+
+		# Blacklisted...
+
+		if isinstance(config["blacklist"], list) and challenge["challenger"]["name"] in config["blacklist"]:
+			log("But challenger is blacklisted!")
 			accepting = False
 
 		# Bot...
