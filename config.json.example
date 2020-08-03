@@ -9,9 +9,9 @@
 	"min_inc_secs": 1,
 	"max_inc_secs": 5,
 
-	"leela_command": "C:\\Programs (self-installed)\\lc0-cudnn git\\lc0.exe",
+	"command": "C:\\Programs (self-installed)\\lc0-cudnn git\\lc0.exe",
 
-	"leela_options": {
+	"options": {
 		"WeightsFile": "C:\\Users\\Owner\\Documents\\Misc\\Chess\\Lc0 Networks\\63409",
 		"SyzygyPath": "C:\\Users\\Owner\\Documents\\Misc\\Chess\\Syzygy",
 		"Temperature": 1.0,

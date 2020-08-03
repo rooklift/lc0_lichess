@@ -166,12 +166,12 @@ def app():
 
 	global bot
 
-	bot = Engine(config["leela_command"], "BOT")
+	bot = Engine(config["command"], "BOT")
 
 	bot.send("uci")
 
-	for key in config["leela_options"]:
-		bot.send("setoption name {} value {}".format(key, config["leela_options"][key]))
+	for key in config["options"]:
+		bot.send("setoption name {} value {}".format(key, config["options"][key]))
 
 	bot.send("ucinewgame")	# Causes Leela to actually load the network, which is good if a ultrabullet game starts.
 
@@ -306,10 +306,10 @@ def start_game(gameId):
 def announce_start(gameId):
 
 	try:
-		weights = os.path.basename(config["leela_options"]["WeightsFile"])
+		weights = os.path.basename(config["options"]["WeightsFile"])
 	except:
 		try:
-			weights = os.path.basename(config["leela_options"]["EvalFile"])
+			weights = os.path.basename(config["options"]["EvalFile"])
 		except:
 			weights = "(unknown net)"
 
