@@ -19,6 +19,7 @@
 		"MoveOverheadMs": 800
 	},
 
+	"blacklist": [],
 	"whitelist": [],
 
 	"allow_bots": true,
