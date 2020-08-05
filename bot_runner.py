@@ -143,7 +143,13 @@ def load_configs():
 
 	headers = {"Authorization": "Bearer {}".format(config["token"])}
 
+	config.setdefault("options", {})
 	config.setdefault("node_count", None)
+	config.setdefault("min_tc_secs", 0)
+	config.setdefault("max_tc_secs", 600)
+	config.setdefault("min_inc_secs", 0)
+	config.setdefault("max_inc_secs", 10)
+	config.setdefault("variants", ["standard"])
 	config.setdefault("blacklist", [])
 	config.setdefault("whitelist", [])
 	config.setdefault("allow_bots", True)
@@ -214,8 +220,8 @@ def handle_challenge(challenge):
 
 		# Variants...
 
-		if challenge["variant"]["key"] != "standard" and challenge["variant"]["key"] != "chess960":
-			log("But it's a variant!")
+		if challenge["variant"]["key"] not in config["variants"]:
+			log("But it's an unacceptable variant! ({})".format(challenge["variant"]["key"]))
 			accepting = False
 
 		# Not whitelisted...
