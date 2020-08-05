@@ -2,14 +2,7 @@
 	"account": "BotAccountName",
 	"token": "xxxxxxxxxxxxxxxx",
 
-	"node_count": null,
-
-	"min_tc_secs": 0,
-	"max_tc_secs": 300,
-	"min_inc_secs": 1,
-	"max_inc_secs": 5,
-
-	"command": "C:\\Programs (self-installed)\\lc0-cudnn git\\lc0.exe",
+	"command": "C:\\Programs (self-installed)\\lc0-dx12 0.26\\lc0.exe",
 
 	"options": {
 		"WeightsFile": "C:\\Users\\Owner\\Documents\\Misc\\Chess\\Lc0 Networks\\63409",
@@ -18,6 +11,15 @@
 		"TempDecayMoves": 14,
 		"MoveOverheadMs": 800
 	},
+
+	"node_count": null,
+
+	"min_tc_secs": 0,
+	"max_tc_secs": 300,
+	"min_inc_secs": 1,
+	"max_inc_secs": 5,
+
+	"variants": ["standard", "chess960"],
 
 	"blacklist": [],
 	"whitelist": [],
