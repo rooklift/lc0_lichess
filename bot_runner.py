@@ -311,6 +311,8 @@ def start_game(gameId):
 
 def announce_start(gameId):
 
+	name = os.path.basename(config["command"])
+
 	try:
 		weights = os.path.basename(config["options"]["WeightsFile"])
 	except:
@@ -320,9 +322,9 @@ def announce_start(gameId):
 			weights = "(unknown net)"
 
 	if isinstance(config["node_count"], int) and config["node_count"] > 0:
-		msg = "Game {} starting. Will run {} at {} node{}.".format(gameId, weights, config["node_count"], "s" if config["node_count"] > 1 else "")
+		msg = "engine: {}, network: {}, running at {} node{}.".format(name, weights, config["node_count"], "s" if config["node_count"] > 1 else "")
 	else:
-		msg = "Game {} starting. Will run {} with time manager.".format(gameId, weights)
+		msg = "engine: {}, network: {}, running with time manager.".format(name, weights)
 
 	log(msg)
 
